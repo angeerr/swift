@@ -270,11 +270,13 @@ def save_ta_checkpoint(self_model, tokenizer, args, output_dir):
             if save_safetensors:
                 safetensors.torch.save_file(
                     state_dict, os.path.join(out_dir, 'model.safetensors'))
+                print(f"111111111111111111:{out_dir}")
             else:
                 torch.save(state_dict,
                            os.path.join(out_dir, 'pytorch_model.bin'))
     else:
         model.save_pretrained(out_dir, safe_serialization=save_safetensors)
+        print(f"222222222222222222222222:{out_dir}")
     # save shard_metadata for consolidation.
     shard_meta = self_model._get_underlay_model().get_shard_metadata()
     xm.save(shard_meta, os.path.join(out_dir, 'shard_meta.pth'))

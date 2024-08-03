@@ -219,6 +219,18 @@ class ExpManager:
             cmd = 'swift sft '
             for key, value in args.items():
                 cmd += f' --{key} {value}'
+        elif exp.cmd == 'pretrain':
+            from swift.llm import SftArguments
+            args = exp.args
+            sft_args = SftArguments(**args)
+            args['output_dir'] = sft_args.output_dir
+            args['logging_dir'] = sft_args.logging_dir
+            args['add_output_dir_suffix'] = False
+            os.makedirs(sft_args.output_dir, exist_ok=True)
+            os.makedirs(sft_args.logging_dir, exist_ok=True)
+            cmd = 'swift sft '
+            for key, value in args.items():
+                cmd += f' --{key} {value}'
         elif exp.cmd == 'dpo':
             from swift.llm import DPOArguments
             args = exp.args

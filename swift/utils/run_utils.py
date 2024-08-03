@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Callable, List, Type, TypeVar, Union
+import argparse
 
 from .logger import get_logger
 from .utils import parse_args
@@ -26,6 +27,16 @@ def get_main(
         if len(remaining_argv) > 0:
             if getattr(args, 'ignore_args_error', False):
                 logger.warning(f'remaining_argv: {remaining_argv}')
+            elif '--agma_gradient_accumulation_steps' in remaining_argv:
+                parser = argparse.ArgumentParser()
+                parser.add_argument('--agma_gradient_accumulation_steps', type=int)
+                new_args, remaining_argv = parser.parse_known_args(remaining_argv)
+                # merge new_args and args
+                for k, v in vars(new_args).items():
+                    setattr(args, k, v)
+                    
+                if len(remaining_argv) > 0:  
+                     raise ValueError(f'remaining_argv: {remaining_argv}')
             else:
                 raise ValueError(f'remaining_argv: {remaining_argv}')
         result = llm_x(args, **kwargs)

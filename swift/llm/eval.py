@@ -9,7 +9,14 @@ from modelscope import GenerationConfig
 
 from swift.utils import get_logger, get_main
 from . import EvalArguments, inference, merge_lora, prepare_model_template
+import wandb
+from transformers import TrainerCallback
 
+class WandbCallback(TrainerCallback):
+    """A callback to log metrics to wandb."""
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if logs:
+            wandb.log(logs)
 logger = get_logger()
 
 
@@ -66,6 +73,9 @@ class EvalModel(CustomModel):
         else:
             generation_info = {}
             ts = time.time()
+            # ################
+            # kwargs['infer_cfg'].pop('max_new_tokens', None)
+            # ################
             response, new_history = inference(
                 self.model,
                 self.template,
@@ -144,10 +154,13 @@ def run_eval_single_model(args: EvalArguments, model_name, record=None):
 
 
 def llm_eval(args: EvalArguments) -> None:
+    wandb.login()
+    wandb.init(project="nlp_class")
     model_name = args.model_type
     if args.name:
         model_name += f'-{args.name}'
     run_eval_single_model(args, model_name)
+    wandb.finish()
 
 
 eval_main = get_main(EvalArguments, llm_eval)

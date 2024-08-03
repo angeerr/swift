@@ -2,16 +2,25 @@
 
 import os
 from dataclasses import dataclass, field
-from typing import List, Optional
+from typing import List, Optional, Union
+# from packaging import version
+# import warnings
+# from pathlib import Path
 
 import torch
-from transformers.training_args import TrainingArguments as HfTrainingArguments
-from transformers.training_args_seq2seq import \
-    Seq2SeqTrainingArguments as HfSeq2SeqTrainingArguments
+# from transformers.training_args import TrainingArguments as HfTrainingArguments
+# from transformers.training_args_seq2seq import \
+#     Seq2SeqTrainingArguments as HfSeq2SeqTrainingArguments
 from transformers.utils import is_accelerate_available
+# from transformers.generation.configuration_utils import GenerationConfig
 
 from swift.utils import is_dist, use_torchacc
+from swift.trainers.my_arguments import MyHfTrainingArguments, MyHfSeq2SeqTrainingArguments
 
+# ################################################################
+
+
+# ###############################################################
 
 @dataclass
 class SwiftArgumentsMixin:
@@ -44,14 +53,27 @@ class SwiftArgumentsMixin:
         super().__post_init__()
 
 
+# @dataclass
+# class TrainingArguments(SwiftArgumentsMixin, HfTrainingArguments):
+#     pass
+
+
+# @dataclass
+# class Seq2SeqTrainingArguments(SwiftArgumentsMixin,
+#                                HfSeq2SeqTrainingArguments):
+
+#     @property
+#     def place_model_on_device(self):
+#         return False if use_torchacc() else super().place_model_on_device
+
 @dataclass
-class TrainingArguments(SwiftArgumentsMixin, HfTrainingArguments):
+class TrainingArguments(SwiftArgumentsMixin, MyHfTrainingArguments):
     pass
 
 
 @dataclass
 class Seq2SeqTrainingArguments(SwiftArgumentsMixin,
-                               HfSeq2SeqTrainingArguments):
+                               MyHfSeq2SeqTrainingArguments):
 
     @property
     def place_model_on_device(self):

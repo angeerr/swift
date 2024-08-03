@@ -28,12 +28,14 @@ try:
 except ImportError:
     from transformers.deepspeed import is_deepspeed_zero3_enabled
 
+from swift.trainers.my_trainers import MyHfSeq2SeqTrainer, MyHfTrainer
 
 class Trainer(PushToMsHubMixin, SwiftMixin, HfTrainer):
     pass
 
 
-class Seq2SeqTrainer(PushToMsHubMixin, SwiftMixin, HfSeq2SeqTrainer):
+# class Seq2SeqTrainer(PushToMsHubMixin, SwiftMixin, HfSeq2SeqTrainer):
+class Seq2SeqTrainer(PushToMsHubMixin, SwiftMixin, MyHfSeq2SeqTrainer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

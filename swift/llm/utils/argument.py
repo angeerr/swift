@@ -245,6 +245,16 @@ class SftArguments:
     # fsdp config file
     fsdp_config: Optional[str] = None
 
+    agma_gradient_accumulation_steps: int = field(
+        default=1,
+        metadata={"help": "Number of updates steps to accumulate before performing a backward/update pass."},
+    )
+
+    agma_lion_beta1: float = field(default=0.95, metadata={"help": "Beta1 for AGMA_Lion optimizer"})
+    agma_lion_beta2: float = field(default=0.98, metadata={"help": "Beta2 for AGAM_Lion optimizer"})
+    
+
+
     def _prepare_target_modules(self, target_modules) -> List[str]:
         if isinstance(target_modules, str):
             target_modules = [target_modules]
@@ -538,6 +548,9 @@ class SftArguments:
             logging_first_step=True,
             fsdp=self.fsdp,
             fsdp_config=self.fsdp_config,
+            agma_gradient_accumulation_steps=self.agma_gradient_accumulation_steps,
+            agma_lion_beta1=self.agma_lion_beta1,
+            agma_lion_beta2=self.agma_lion_beta2,
             **kwargs)
 
         training_args.ddp_find_unused_parameters = self.ddp_find_unused_parameters

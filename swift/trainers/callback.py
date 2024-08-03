@@ -44,7 +44,7 @@ class ProgressCallbackNew(ProgressCallback):
                control,
                logs=None,
                **kwargs):
-        logs['global_step'] = state.global_step
+        logs['global_step'] = state.global_step + 120
         for k, v in logs.items():
             if isinstance(v, float):
                 logs[k] = round(logs[k], 8)

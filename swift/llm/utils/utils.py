@@ -529,6 +529,10 @@ def inference_stream(model: PreTrainedModel,
         history[-1][-1] = history[-1][-1] + query
         act_length = len(history[-1][-1])
         query = None
+    
+    # ################################
+    template.max_length = get_max_model_len(model.config)//2
+    # #############################
 
     example = {
         'query': query,
@@ -683,6 +687,10 @@ def inference(model: PreTrainedModel,
     if is_observation:
         history[-1][-1] = history[-1][-1] + query
         query = None
+
+    # ################################
+    template.max_length = get_max_model_len(model.config)//2
+    # ################################
 
     example = {
         'query': query,

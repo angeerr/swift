@@ -63,6 +63,7 @@ class DatasetName:
     sharegpt_zh = 'sharegpt-zh'
     tulu_v2_sft_mixture = 'tulu-v2-sft-mixture'
     wikipedia_zh = 'wikipedia-zh'
+    wikipedia = 'wikipedia'
     open_orca = 'open-orca'
     open_orca_gpt4 = 'open-orca-gpt4'
     sharegpt_gpt4 = 'sharegpt-gpt4'
@@ -1313,6 +1314,13 @@ register_dataset(
 register_dataset(
     DatasetName.wikipedia_zh,
     'AI-ModelScope/wikipedia-cn-20230720-filtered', ['train'],
+    None,
+    RenameColumnsPreprocessor({'completion': 'response'}),
+    get_dataset_from_repo,
+    tags=['text-generation', 'general', 'pretrained'])
+register_dataset(
+    DatasetName.wikipedia,
+    'AI-ModelScope/olm-wikipedia-20221220', ['train'],
     None,
     RenameColumnsPreprocessor({'completion': 'response'}),
     get_dataset_from_repo,

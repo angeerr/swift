@@ -299,6 +299,15 @@ class ModelType:
     # c4ai
     c4ai_command_r_v01 = 'c4ai-command-r-v01'
     c4ai_command_r_plus = 'c4ai-command-r-plus'
+    # apple
+    openelm_1_1b = 'OpenELM-1_1B'
+    openelm_450m = 'OpenELM-450M'
+    openelm_270m = 'OpenELM-270M'
+    openelm_3b = 'OpenELM-3B'
+    # gpt2
+    gpt2 = 'gpt2'
+    gpt2_medium = 'gpt2-medium'
+    gpt2_large = 'gpt2-large'
 
     @classmethod
     def get_model_name_list(cls) -> List[str]:
@@ -3060,6 +3069,39 @@ def get_model_tokenizer_llava(model_dir: str,
         'get_model_tokenizer_function': get_model_tokenizer_qwen
     },
     support_flash_attn=True)
+
+@register_model(
+    ModelType.openelm_1_1b,
+    "apple/OpenELM-1_1B",
+    # TODO: lora
+    # TODO: template
+    # TemplateType.llama
+)
+@register_model(
+    ModelType.openelm_450m,
+    "apple/OpenELM-450M",
+)
+@register_model(
+    ModelType.openelm_270m,
+    "apple/OpenELM-270M",
+)
+@register_model(
+    ModelType.openelm_3b,
+    "apple/OpenELM-3B",
+)
+@register_model(
+    ModelType.gpt2,
+    "gpt2"
+)
+@register_model(
+    ModelType.gpt2_medium,
+    'gpt2-medium'
+)
+@register_model(
+    ModelType.gpt2_large,
+    'gpt2-large'
+)
+
 def get_model_tokenizer_mplug_owl2(model_dir: str,
                                    torch_dtype: Dtype,
                                    model_kwargs: Dict[str, Any],

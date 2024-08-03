@@ -26,11 +26,21 @@ from .utils import (TEMPLATE_MAPPING, LazyLLMDataset, SftArguments, Template,
                     print_example, set_generation_config, sort_by_max_length,
                     stat_dataset)
 from .utils.argument import handle_dataset_mixture
+import wandb
+from transformers import TrainerCallback
+
+class WandbCallback(TrainerCallback):
+    """A callback to log metrics to wandb."""
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if logs:
+            wandb.log(logs)
+
 
 logger = get_logger()
 
-
 def llm_sft(args: SftArguments) -> Dict[str, Union[str, Any]]:
+    wandb.login()
+    wandb.init(project="nlp_class")
     logger.info(f'args: {args}')
     training_args = args.training_args
     if is_torch_npu_available():
@@ -238,7 +248,8 @@ def llm_sft(args: SftArguments) -> Dict[str, Union[str, Any]]:
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         tokenizer=tokenizer,
-        callbacks=callbacks,
+        #callbacks=callbacks,
+        callbacks=[WandbCallback()],
         **trainer_kwargs)
     trainer.sft_args = args
     if use_torchacc():
@@ -289,6 +300,7 @@ def llm_sft(args: SftArguments) -> Dict[str, Union[str, Any]]:
     jsonl_path = os.path.join(args.output_dir, 'logging.jsonl')
     with open(jsonl_path, 'a', encoding='utf-8') as f:
         f.write(json.dumps(run_info) + '\n')
+    wandb.finish()
     return run_info
 
 

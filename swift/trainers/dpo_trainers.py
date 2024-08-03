@@ -3,7 +3,8 @@ from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Union
 import torch
 from torch import nn
 from transformers import PreTrainedModel, trainer
-from trl import DPOTrainer as HFDPOTrainer
+# from trl import DPOTrainer as HFDPOTrainer
+from swift.trainers.my_trainers import MyHfDPOTrainer as HFDPOTrainer
 
 from swift.llm.utils.template import Context, Template
 from swift.llm.utils.utils import sort_by_max_length

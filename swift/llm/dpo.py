@@ -16,10 +16,24 @@ from .tuner import prepare_model
 from .utils import (DPOArguments, Template, get_dataset, get_model_tokenizer,
                     get_template, get_time_info, set_generation_config)
 
+import wandb
+from transformers import TrainerCallback
+
+class WandbCallback(TrainerCallback):
+    """A callback to log metrics to wandb."""
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if logs:
+            wandb.log(logs)
+
+
 logger = get_logger()
 
 
 def llm_dpo(args: DPOArguments) -> str:
+    wandb.login()
+    wandb.init(
+    project="nlp_class"
+)
     logger.info(f'args: {args}')
     training_args = args.training_args
     print(f'device_count: {torch.cuda.device_count()}')
@@ -154,6 +168,7 @@ def llm_dpo(args: DPOArguments) -> str:
         eval_dataset=val_dataset,
         tokenizer=tokenizer,
         template=template,
+        callbacks=[WandbCallback()],
         sft_beta=args.sft_beta,
         max_prompt_length=args.max_prompt_length,
         max_length=args.max_length,
@@ -203,6 +218,7 @@ def llm_dpo(args: DPOArguments) -> str:
     jsonl_path = os.path.join(args.output_dir, 'logging.jsonl')
     with open(jsonl_path, 'a', encoding='utf-8') as f:
         f.write(json.dumps(run_info) + '\n')
+    wandb.finish()
     return run_info
 
 

@@ -1,0 +1,1 @@
+{"loss": 0.98251829, "acc": 0.71495113, "grad_norm": 2.09375, "learning_rate": 1.134156378600823e-06, "epoch": 0.46, "_timestamp": 1713772308.9239147, "_runtime": 6051.35603761673, "_step": 177, "eval_loss": 0.9140949249267578, "eval_acc": 0.726280451681238, "eval_runtime": 29.0071, "eval_samples_per_second": 14.238, "eval_steps_per_second": 0.448}
